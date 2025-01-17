@@ -2,7 +2,7 @@ import React from 'react'
 
 const VideoTile = ({ thumbnail, channelImg, description, channelName, views, lastTime, videoLength }) => {
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 h-max">
+    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 h-full w-full">
   <div className="relative">
     <img src={thumbnail} alt={`${channelName} video thumbnail`} className="w-full h-48 object-cover" />
     

@@ -8,6 +8,7 @@ import { val_convert } from './data';
 import 'moment-duration-format';
 const HomeVideos = ({ Category }) => {
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const fetchChannelDetails = async (channelId) => {
     const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${channelId}&key=${API_KEY}`;
     try {
@@ -24,6 +25,7 @@ const HomeVideos = ({ Category }) => {
     if (Category) {
       videoList_url += `&videoCategoryId=${Category}`;
     }
+    setIsLoading(true)
     try {
       const response = await fetch(videoList_url);
       const data = await response.json();
@@ -42,6 +44,7 @@ const HomeVideos = ({ Category }) => {
       console.error('Error fetching data:', error);
       setData([]);
     }
+    setIsLoading(false)
   };
 
   useEffect(() => {
@@ -59,8 +62,12 @@ const HomeVideos = ({ Category }) => {
       return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
   };
-  return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+  return (<>
+  {isLoading ? (<div className="flex text-center mt-8 justify-center"><div class="flex flex-row gap-2">
+    <div class="w-4 h-4 rounded-full bg-gray-700 animate-bounce [animation-delay:.7s]"></div>
+    <div class="w-4 h-4 rounded-full bg-gray-700 animate-bounce [animation-delay:.3s]"></div>
+    <div class="w-4 h-4 rounded-full bg-gray-700 animate-bounce [animation-delay:.7s]"></div>
+  </div></div>):(<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
       {data.map((item, index) => {
         return (
           <Link key={item.id} to={`video/${item.snippet.categoryId}/${item.id}`}>
@@ -72,11 +79,16 @@ const HomeVideos = ({ Category }) => {
               views={val_convert(item.statistics.viewCount)}
               lastTime={moment (item.snippet.publishedAt).fromNow()}
               videoLength={formatDuration(item.contentDetails.duration)}
+              
             />
           </Link>
         );
       })}
-    </div>
+    </div>)}
+  
+  
+  </>
+    
   );
 };
 

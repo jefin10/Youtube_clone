@@ -3,7 +3,6 @@ import like from '../assets/like.png';
 import dislike from '../assets/dislike.png';
 import share from '../assets/share.png';
 import save from '../assets/save.png';
-import channelAvatar from '../assets/mb.jpg';
 import userAvatar from '../assets/mb.jpg';
 import { API_KEY } from './data';
 import moment from 'moment'; 
@@ -12,6 +11,7 @@ import { val_convert } from './data';
 const Videoplay = ({ videoId }) => {
   const [videoData, setVideoData] = useState(null);
   const [comments, setComments] = useState([]);
+  const [channelData, setChannelData] = useState(null);
 
   useEffect(() => {
     const fetchVideoData = async () => {
@@ -20,6 +20,15 @@ const Videoplay = ({ videoId }) => {
         const videoResponse = await fetch(videoUrl);
         const videoJson = await videoResponse.json();
         setVideoData(videoJson.items[0]);
+
+        const channelId = videoJson.items[0].snippet.channelId;
+        const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${channelId}&key=${API_KEY}`;
+        const channelResponse = await fetch(channelUrl);
+        const channelJson = await channelResponse.json();
+        setChannelData({
+          thumbnailUrl: channelJson.items[0].snippet.thumbnails.default.url,
+          subscriberCount: channelJson.items[0].statistics.subscriberCount
+        });
 
         const commentsUrl = `https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${videoId}&key=${API_KEY}`;
         const commentsResponse = await fetch(commentsUrl);
@@ -33,7 +42,7 @@ const Videoplay = ({ videoId }) => {
     fetchVideoData();
   }, [videoId]);
 
-  if (!videoData) return <div>Loading...</div>;
+  if (!videoData || !channelData) return <div>Loading...</div>;
   const description = videoData.snippet.description;
   const sentences = description.split(/(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s/);
   const firstTwoSentences = sentences.slice(0, 2).join(' ');
@@ -73,13 +82,12 @@ const Videoplay = ({ videoId }) => {
         </div>
       </div>
 
-      {/* Channel Subscribe Section */}
       <div className="flex items-center justify-between py-4 border-t border-b border-gray-200">
         <div className="flex items-center">
-          <img src={channelAvatar} alt="Channel Avatar" className="w-10 h-10 rounded-full mr-3" />
+          <img src={channelData.thumbnailUrl} alt="Channel Avatar" className="w-10 h-10 rounded-full mr-3" />
           <div>
             <h4 className="font-bold">{videoData.snippet.channelTitle}</h4>
-            <p className="text-sm text-gray-500">{val_convert(videoData.statistics.commentCount)} subscribers</p>
+            <p className="text-sm text-gray-500">{val_convert(channelData.subscriberCount)} subscribers</p>
           </div>
         </div>
         <button className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700">
@@ -87,18 +95,15 @@ const Videoplay = ({ videoId }) => {
         </button>
       </div>
 
-      {/* Video Description */}
       <div className="mt-4 mb-6">
         <p className="text-sm text-gray-700">
           {firstTwoSentences}
         </p>
       </div>
 
-      {/* Comments Section */}
       <div className="mt-6">
         <h4 className="font-bold mb-4">{val_convert(videoData.statistics.commentCount)} Comments</h4>
         
-        {/* Comment Input */}
         <div className="flex items-start mb-6">
           <img src={userAvatar} alt="User Avatar" className="w-8 h-8 rounded-full mr-3" />
           <div className="flex-grow">
@@ -114,7 +119,6 @@ const Videoplay = ({ videoId }) => {
           </div>
         </div>
 
-        {/* Individual Comments */}
         <div className="space-y-4">
           {comments.map((comment) => (
             <div key={comment.id} className="flex">

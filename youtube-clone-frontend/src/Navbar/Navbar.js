@@ -12,6 +12,7 @@ const Navbar = ({onToggleSidebar,ionToggleSidebar}) => {
     onToggleSidebar();
     ionToggleSidebar();
   };
+  
   const[Keyword, setKeyword]=useState("")
   
   const navigate = useNavigate();
@@ -23,6 +24,11 @@ const Navbar = ({onToggleSidebar,ionToggleSidebar}) => {
     
     navigate(`/search/${inputValue}`)
   }
+  const handleEnterPress = (e) => {
+    if (e.key === "Enter"){
+      handleSearchClick();
+    }
+}
   return (
     <div className="flex h-14 w-full items-center justify-between bg-white px-4 fixed top-0 z-50">
       <div className='flex items-center'>
@@ -33,9 +39,9 @@ const Navbar = ({onToggleSidebar,ionToggleSidebar}) => {
 
       <div className='flex items-center justify-center flex-grow max-w-2xl'>
         <div className='flex w-full'>
-          <input id='lol' type='text' placeholder='Search' className='w-full px-4 py-2 border border-gray-300 rounded-l-full text-base focus:outline-none focus:border-blue-500' />
+          <input id='lol' type='text' placeholder='Search' className='w-full px-4 py-2 border border-gray-300 rounded-l-full text-base focus:outline-none focus:border-blue-500' onKeyDown={(e)=> handleEnterPress(e)}/>
             <button className='flex items-center justify-center w-16 h-12 border border-l-0 border-gray-300 rounded-r-full bg-gray-100 hover:bg-gray-200'>
-            <img src={search} alt="Search" className="h-5 w-5" onClick={handleSearchClick}/>
+            <img src={search} alt="Search" className="h-5 w-5" onClick={handleSearchClick} />
           </button>
         </div>
         <button className='ml-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200'>
