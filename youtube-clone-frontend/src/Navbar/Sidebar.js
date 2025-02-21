@@ -26,7 +26,7 @@ const Sidebar = ({isCollapsed, Category, setCategory}) => {
     <div className={`bg-white py-4 transition-all duration-300 hide-scrollbar overflow-y-auto flex-shrink-0 border-r ${isCollapsed ? 'w-16 h-full' : 'w-64 h-screen'}`}>
       {!isCollapsed ? (
         <div className="flex flex-col">
-          <div className="flex flex-col space-y-1 mb-4">
+          <div className="flex flex-col mb-4 space-y-1">
             <SidebarComponents icon={home} label="Home"  isActive={Category === 0} onClick={() => handleCategoryClick(0)}/>
             <SidebarComponents icon={game_icon} label="Gaming" onClick={() => handleCategoryClick(20)} isActive={Category === 20} />
             <SidebarComponents icon={automobiles} label="Automobiles" onClick={() => handleCategoryClick(2)} isActive={Category === 2} />
@@ -37,17 +37,17 @@ const Sidebar = ({isCollapsed, Category, setCategory}) => {
             <SidebarComponents icon={blogs} label="Blogs" onClick={() => handleCategoryClick(22)} isActive={Category === 22} />
             <hr className='my-2'/>
           </div>
-          <div className="subscriber-list mt-4" >
-            <span className='font-semibold text-sm text-gray-600 px-4 mb-2 block'>Subscriptions</span>
-            <SidebarComponentsSub icon={pew} label="Pewdiepie"/>
-            <SidebarComponentsSub icon={aw} label="Alan Walker"/>
-            <SidebarComponentsSub icon={dp} label="Dude Perfect"/>
-            <SidebarComponentsSub icon={mb} label="MrBeast"/>
+          <div className="mt-4 subscriber-list" >
+            <span className='block px-4 mb-2 text-sm font-semibold text-gray-600'>Subscriptions</span>
+            <SidebarComponentsSub icon={pew} label="Pewdiepie" id='UC-lHJZR3Gqxm24_Vd_AJ5Yw'/>
+            <SidebarComponentsSub icon={aw} label="Alan Walker" id='UCJrOtniJ0-NWz37R30urifQ'/>
+            <SidebarComponentsSub icon={dp} label="Dude Perfect" id='UCRijo3ddMTht_IHyNSNXpNQ'/>
+            <SidebarComponentsSub icon={mb} label="MrBeast" id='UCX6OQ3DkcsbYNE6H8uQQuVA'/>
           </div>
         </div>
       ) : (
         <div className="flex flex-col">
-          <div className="flex flex-col space-y-1 mb-4">
+          <div className="flex flex-col mb-4 space-y-1">
             <SidebarComponents icon={home} label="" onClick={() => setCategory(0)} isActive={Category === 0} />
             <SidebarComponents icon={game_icon} label="" onClick={() => setCategory(20)} isActive={Category === 20} />
             <SidebarComponents icon={automobiles} label="" onClick={() => setCategory(2)} isActive={Category === 2} />

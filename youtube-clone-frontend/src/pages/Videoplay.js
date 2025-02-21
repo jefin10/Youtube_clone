@@ -7,6 +7,7 @@ import userAvatar from '../assets/mb.jpg';
 import { API_KEY } from './data';
 import moment from 'moment'; 
 import { val_convert } from './data';
+import { useNavigate } from "react-router-dom";
 
 const Videoplay = ({ videoId }) => {
   const [videoData, setVideoData] = useState(null);
@@ -26,6 +27,7 @@ const Videoplay = ({ videoId }) => {
         const channelResponse = await fetch(channelUrl);
         const channelJson = await channelResponse.json();
         setChannelData({
+          channelId:videoJson.items[0].snippet.channelId,
           thumbnailUrl: channelJson.items[0].snippet.thumbnails.default.url,
           subscriberCount: channelJson.items[0].statistics.subscriberCount
         });
@@ -41,15 +43,17 @@ const Videoplay = ({ videoId }) => {
 
     fetchVideoData();
   }, [videoId]);
-
+  const navigate = useNavigate()
   if (!videoData || !channelData) return <div>Loading...</div>;
   const description = videoData.snippet.description;
   const sentences = description.split(/(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s/);
   const firstTwoSentences = sentences.slice(0, 2).join(' ');
-
+  const handleChannelClick=() =>{
+    navigate(`/channel/${channelData.channelId}`)
+  }
   return (
-    <div className="max-w-4xl mx-auto mt-8 px-4">
-      <div className="aspect-w-16 aspect-h-9 mb-4">
+    <div className="max-w-4xl px-4 mx-auto mt-8">
+      <div className="mb-4 aspect-w-16 aspect-h-9">
         <iframe 
           className="w-full" 
           style={{ height: '37vw' }} 
@@ -61,8 +65,8 @@ const Videoplay = ({ videoId }) => {
         ></iframe>
       </div>
 
-      <h3 className="text-xl font-bold mb-2">{videoData.snippet.title}</h3>
-      <div className="flex justify-between items-center mb-4">
+      <h3 className="mb-2 text-xl font-bold">{videoData.snippet.title}</h3>
+      <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-gray-500">
           {val_convert(videoData.statistics.viewCount)} views • {moment(videoData.snippet.publishedAt).fromNow()}
         </p>
@@ -83,14 +87,14 @@ const Videoplay = ({ videoId }) => {
       </div>
 
       <div className="flex items-center justify-between py-4 border-t border-b border-gray-200">
-        <div className="flex items-center">
-          <img src={channelData.thumbnailUrl} alt="Channel Avatar" className="w-10 h-10 rounded-full mr-3" />
+        <div className="flex items-center" onClick={handleChannelClick}>
+          <img src={channelData.thumbnailUrl} alt="Channel Avatar" className="w-10 h-10 mr-3 rounded-full" />
           <div>
             <h4 className="font-bold">{videoData.snippet.channelTitle}</h4>
             <p className="text-sm text-gray-500">{val_convert(channelData.subscriberCount)} subscribers</p>
           </div>
         </div>
-        <button className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700">
+        <button className="px-4 py-2 text-white bg-red-600 rounded-full hover:bg-red-700">
           Subscribe
         </button>
       </div>
@@ -102,10 +106,10 @@ const Videoplay = ({ videoId }) => {
       </div>
 
       <div className="mt-6">
-        <h4 className="font-bold mb-4">{val_convert(videoData.statistics.commentCount)} Comments</h4>
+        <h4 className="mb-4 font-bold">{val_convert(videoData.statistics.commentCount)} Comments</h4>
         
         <div className="flex items-start mb-6">
-          <img src={userAvatar} alt="User Avatar" className="w-8 h-8 rounded-full mr-3" />
+          <img src={userAvatar} alt="User Avatar" className="w-8 h-8 mr-3 rounded-full" />
           <div className="flex-grow">
             <input
               type="text"
@@ -113,8 +117,8 @@ const Videoplay = ({ videoId }) => {
               className="w-full p-2 border-b border-gray-300 focus:outline-none focus:border-blue-500"
             />
             <div className="flex justify-end mt-2">
-              <button className="text-sm text-gray-500 mr-2">Cancel</button>
-              <button className="text-sm bg-blue-500 text-white px-3 py-1 rounded">Comment</button>
+              <button className="mr-2 text-sm text-gray-500">Cancel</button>
+              <button className="px-3 py-1 text-sm text-white bg-blue-500 rounded">Comment</button>
             </div>
           </div>
         </div>
@@ -122,15 +126,15 @@ const Videoplay = ({ videoId }) => {
         <div className="space-y-4">
           {comments.map((comment) => (
             <div key={comment.id} className="flex">
-              <img src={comment.snippet.topLevelComment.snippet.authorProfileImageUrl} alt="User Avatar" className="w-8 h-8 rounded-full mr-3" />
+              <img src={comment.snippet.topLevelComment.snippet.authorProfileImageUrl} alt="User Avatar" className="w-8 h-8 mr-3 rounded-full" />
               <div>
                 <p className="font-semibold">
                   {comment.snippet.topLevelComment.snippet.authorDisplayName} 
-                  <span className="text-sm text-gray-500 font-normal ml-2">
+                  <span className="ml-2 text-sm font-normal text-gray-500">
                     {moment(comment.snippet.topLevelComment.snippet.publishedAt).fromNow()}
                   </span>
                 </p>
-                <p className="text-sm mt-1">{comment.snippet.topLevelComment.snippet.textDisplay}</p>
+                <p className="mt-1 text-sm">{comment.snippet.topLevelComment.snippet.textDisplay}</p>
                 <div className="flex items-center mt-2 space-x-3 text-sm text-gray-500">
                   <button className="flex items-center">
                     <img src={like} alt="Like" className="w-4 h-4 mr-1" /> 

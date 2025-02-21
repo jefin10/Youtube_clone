@@ -5,6 +5,7 @@ import Video from './pages/Video';
 import Navbar from './Navbar/Navbar';
 import SearchPage from './pages/SearchPage';
 import Channel from './pages/channel';
+import ChannelPage from './pages/ChannelPage';
 
 
 function App() {
@@ -28,7 +29,8 @@ function App() {
             <Route path='/' element={<Home isSidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} />} />
             <Route path='/video/:CategoryID/:VideoID' element={<Video iisSidebarCollapsed={iisSidebarCollapsed} ionToggleSidebar={itoggleSidebar} />} />
             <Route path='/search/:Keyword' element={<SearchPage isSidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} />} />
-            <Route path='/channel/12' element={<Channel isSidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} />} />
+            <Route path='/channel/:channelId' element={<ChannelPage isSidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} />} />
+            <Route path='/channel/:channelId/video/:CategoryID/:VideoID' element={<Video iisSidebarCollapsed={iisSidebarCollapsed} ionToggleSidebar={itoggleSidebar} />} />
           </Routes>
         </div>
       </div>
