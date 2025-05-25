@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Sidebar from '../Navbar/Sidebar';
 import HomeVideos from './HomeVideos';
 
-const Home = ({ isSidebarCollapsed, onToggleSidebar }) => {
+const Home = ({ isSidebarCollapsed, onToggleSidebar, isMobile }) => {
   const location = useLocation();
   const [Category, setCategory] = useState(location.state?.category || 0);
 
@@ -13,12 +13,26 @@ const Home = ({ isSidebarCollapsed, onToggleSidebar }) => {
     }
   }, [location.state?.category]);
 
+  const getMainContentClasses = () => {
+    if (isMobile) {
+      return 'flex-grow p-2 md:p-4';
+    }
+    return `flex-grow p-4 ${isSidebarCollapsed ? 'ml-16' : 'ml-64'}`;
+  };
+
   return (
     <div className="flex">
-      <div className={`fixed top-15 left-0 ${isSidebarCollapsed ? 'w-16' : 'w-64'}`}>
-        <Sidebar isCollapsed={isSidebarCollapsed} Category={Category} setCategory={setCategory} />
-      </div>
-      <div className={`flex-grow p-4 ${isSidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
+      {!isMobile && (
+        <div className={`fixed top-14 left-0 ${isSidebarCollapsed ? 'w-16' : 'w-64'}`}>
+          <Sidebar isCollapsed={isSidebarCollapsed} Category={Category} setCategory={setCategory} isMobile={isMobile} />
+        </div>
+      )}
+      
+      {isMobile && (
+        <Sidebar isCollapsed={isSidebarCollapsed} Category={Category} setCategory={setCategory} isMobile={isMobile} />
+      )}
+      
+      <div className={getMainContentClasses()}>
         <HomeVideos Category={Category} />
       </div>
     </div>
